@@ -1,11 +1,44 @@
 ﻿@model Domain.Models.Poll
 
-<h2>Results for: @Model.Title</h2>
+<h2>Results: @Model.Title</h2>
 
-<ul>
-    <li>@Model.Option1Text: @Model.Option1VotesCount votes</li>
-    <li>@Model.Option2Text: @Model.Option2VotesCount votes</li>
-    <li>@Model.Option3Text: @Model.Option3VotesCount votes</li>
-</ul>
 
-<a asp-action="Index">Back to Polls</a>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <div style="width: 500px; height: 500px;">
+        <canvas id="resultsChart"></canvas>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('resultsChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    '@Model.Option1Text',
+                    '@Model.Option2Text',
+                    '@Model.Option3Text'
+                ],
+                datasets: [{
+                    label: 'Votes',
+                    data: [
+        @Model.Option1VotesCount,
+        @Model.Option2VotesCount,
+        @Model.Option3VotesCount
+                    ],
+                    borderWidth: 1
+                }]
+            },options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+}

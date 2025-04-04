@@ -43,7 +43,14 @@ namespace DataAccess.Repositories
             }
 
             _context.SaveChanges();
+
+            //UploadToCloud(poll);
         }
+
+        //private void UploadToCloud(Poll poll)
+        //{
+        //    Console.WriteLine($"upload: {poll.Title}");
+        //}
     }
 }
 

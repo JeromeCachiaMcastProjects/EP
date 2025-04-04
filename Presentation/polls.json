@@ -1,0 +1,13 @@
+[
+  {
+    "Id": 1,
+    "Title": "best storage (json test)",
+    "Option1Text": "json",
+    "Option2Text": "db",
+    "Option3Text": ".txt",
+    "Option1VotesCount": 1,
+    "Option2VotesCount": 0,
+    "Option3VotesCount": 0,
+    "DateCreated": "2025-04-04T15:12:01.1825974Z"
+  }
+]

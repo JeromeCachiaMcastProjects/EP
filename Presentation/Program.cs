@@ -4,8 +4,10 @@ using Presentation.Data;
 using DataAccess.DataContext;
 using DataAccess.Repositories;
 using Domain.Interfaces;
+using Presentation.ActionFilters;
 
 var builder = WebApplication.CreateBuilder(args);
+var useFileRepo = builder.Configuration.GetValue<bool>("UseFileRepository");
 
 // Add services to the container.
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -14,15 +16,23 @@ string connectionString = "Server=LAPTOP-D3AORRD8\\SQLEXPRESS;Database=PollDb;Tr
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddScoped<OneVoteOnlyFilter>();
 
-builder.Services.AddDbContext<PollDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+if (useFileRepo)
+{
+    builder.Services.AddSingleton<IPollRepository, PollFileRepository>();
+}
+else
+{
+    builder.Services.AddScoped<IPollRepository, PollRepository>();
+    builder.Services.AddDbContext<PollDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddScoped<IPollRepository, PollRepository>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

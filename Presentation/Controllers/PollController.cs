@@ -1,7 +1,10 @@
 ﻿using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
 using Presentation.Models.ViewModels;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
@@ -23,12 +26,24 @@ namespace Presentation.Controllers
 
         public IActionResult Create()
         {
+            if (!User.Identity?.IsAuthenticated ?? true)
+            {
+                TempData["Message"] = "You must be logged in for this functionality.";
+                return RedirectToAction("Index");
+            }
+
             return View();
         }
 
         [HttpPost]
         public IActionResult Create(PollCreateViewModel model)
         {
+            if (!User.Identity?.IsAuthenticated ?? true)
+            {
+                TempData["Message"] = "You must be logged in for this functionality.";
+                return RedirectToAction("Index");
+            }
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -54,11 +69,32 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(OneVoteOnlyFilter))]
         public IActionResult Vote(int pollId, int option, [FromServices] IPollRepository repo)
         {
+            if (!User.Identity?.IsAuthenticated ?? true)
+            {
+                TempData["Message"] = "You must be logged in for this functionality.";
+                return RedirectToAction("Index");
+            }
+
+            if (HttpContext.Items["AlreadyVoted"] is true && HttpContext.Items["PollMessage"] is string msg)
+            {
+                TempData["Message"] = msg;
+                return RedirectToAction("Index");
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var poll = repo.GetPolls().FirstOrDefault(p => p.Id == pollId);
+
+            if (poll == null) return NotFound();
+
+            poll.VotedUserIds.Add(userId); // Mark user as voted
             repo.Vote(pollId, option);
+
             return RedirectToAction("Results", new { id = pollId });
         }
+
 
         public IActionResult Results(int id)
         {
@@ -67,7 +103,11 @@ namespace Presentation.Controllers
 
             return View(poll);
         }
-
+        public IActionResult AllResults()
+        {
+            var polls = _pollRepository.GetPolls();
+            return View(polls);
+        }
 
     }
 }

@@ -1,12 +1,21 @@
 ﻿@model IEnumerable<Domain.Models.Poll>
 
+@if (TempData["Message"] is string message)
+{
+    <div class="alert alert-warning text-center">@message</div>
+}
+
 <h2>All Polls</h2>
 
-<a asp-action="Create">Create New Poll</a>
+<a class="btn btn-primary mb-3" asp-action="Create">Create New Poll</a>
 
-<ul>
+<ul class="list-group">
     @foreach (var poll in Model)
     {
-        <li>@poll.Title - @poll.DateCreated.ToShortDateString()</li>
+        <li class="list-group-item">
+            <a asp-action="Vote" asp-route-id="@poll.Id" class="text-decoration-none">
+                <strong>@poll.Title</strong> <small class="text-muted">(@poll.DateCreated.ToShortDateString())</small>
+            </a>
+        </li>
     }
 </ul>

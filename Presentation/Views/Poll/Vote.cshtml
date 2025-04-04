@@ -5,7 +5,19 @@
 <form asp-action="Vote" method="post">
     <input type="hidden" name="pollId" value="@Model.Id" />
 
-    <button type="submit" name="option" value="1">@Model.Option1Text</button><br />
-    <button type="submit" name="option" value="2">@Model.Option2Text</button><br />
-    <button type="submit" name="option" value="3">@Model.Option3Text</button>
+    <div class="mb-2">
+        <button type="submit" name="option" value="1" class="btn btn-outline-primary w-100">
+            @Model.Option1Text
+        </button>
+    </div>
+    <div class="mb-2">
+        <button type="submit" name="option" value="2" class="btn btn-outline-primary w-100">
+            @Model.Option2Text
+        </button>
+    </div>
+    <div class="mb-3">
+        <button type="submit" name="option" value="3" class="btn btn-outline-primary w-100">
+            @Model.Option3Text
+        </button>
+    </div>
 </form>

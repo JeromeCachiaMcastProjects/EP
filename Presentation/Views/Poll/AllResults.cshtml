@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Domain.Models.Poll>
+
+<h2>All Poll Results</h2>
+
+@foreach (var poll in Model)
+{
+    var chartId = "chart_" + poll.Id;
+    var totalVotes = poll.Option1VotesCount + poll.Option2VotesCount + poll.Option3VotesCount;
+
+    <div class="mb-5 text-center">
+        <h4>@poll.Title</h4>
+
+        @if (totalVotes == 0)
+        {
+            <p>No votes yet.</p>
+        }
+        else
+        {
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="width: 300px; height: 300px;">
+                    <canvas id="@chartId"></canvas>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        @foreach (var poll in Model)
+        {
+            var totalVotes = poll.Option1VotesCount + poll.Option2VotesCount + poll.Option3VotesCount;
+            if (totalVotes == 0) { continue; }
+
+            var chartId = "chart_" + poll.Id;
+            <text>
+                    (function () {
+                        const ctx = document.getElementById('@chartId').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: [
+                                    '@poll.Option1Text',
+                                    '@poll.Option2Text',
+                                    '@poll.Option3Text'
+                                ],
+                                datasets: [{
+                                    data: [
+                @poll.Option1VotesCount,
+                @poll.Option2VotesCount,
+                @poll.Option3VotesCount
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }
+                        });
+                    })();
+            </text>
+        }
+    </script>
+}
