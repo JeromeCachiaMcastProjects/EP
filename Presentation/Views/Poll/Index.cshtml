@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Domain.Models.Poll>
+
+<h2>All Polls</h2>
+
+<a asp-action="Create">Create New Poll</a>
+
+<ul>
+    @foreach (var poll in Model)
+    {
+        <li>@poll.Title - @poll.DateCreated.ToShortDateString()</li>
+    }
+</ul>

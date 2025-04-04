@@ -1,0 +1,11 @@
+﻿@model Domain.Models.Poll
+
+<h2>Vote: @Model.Title</h2>
+
+<form asp-action="Vote" method="post">
+    <input type="hidden" name="pollId" value="@Model.Id" />
+
+    <button type="submit" name="option" value="1">@Model.Option1Text</button><br />
+    <button type="submit" name="option" value="2">@Model.Option2Text</button><br />
+    <button type="submit" name="option" value="3">@Model.Option3Text</button>
+</form>

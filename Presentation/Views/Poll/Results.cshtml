@@ -1,0 +1,11 @@
+﻿@model Domain.Models.Poll
+
+<h2>Results for: @Model.Title</h2>
+
+<ul>
+    <li>@Model.Option1Text: @Model.Option1VotesCount votes</li>
+    <li>@Model.Option2Text: @Model.Option2VotesCount votes</li>
+    <li>@Model.Option3Text: @Model.Option3VotesCount votes</li>
+</ul>
+
+<a asp-action="Index">Back to Polls</a>
