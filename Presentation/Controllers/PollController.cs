@@ -20,7 +20,7 @@ namespace Presentation.Controllers
 
         public IActionResult Index()
         {
-            var polls = _pollRepository.GetPolls();
+            var polls = _pollRepository.GetPolls().ToList();
             return View(polls);
         }
 
@@ -105,7 +105,7 @@ namespace Presentation.Controllers
         }
         public IActionResult AllResults()
         {
-            var polls = _pollRepository.GetPolls();
+            var polls = _pollRepository.GetPolls().ToList();
             return View(polls);
         }
 

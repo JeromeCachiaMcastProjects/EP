@@ -19,7 +19,7 @@ namespace Presentation.ActionFilters
             var user = context.HttpContext.User;
             if (!user.Identity?.IsAuthenticated ?? true)
             {
-                context.Result = new RedirectToPageResult("/Account/Login", null, "/Identity");
+                context.Result = new RedirectResult("/Identity/Account/Login");
                 return;
             }
 
@@ -29,8 +29,10 @@ namespace Presentation.ActionFilters
                 var poll = _repo.GetPolls().FirstOrDefault(p => p.Id == pollId);
                 if (poll != null && poll.VotedUserIds.Contains(userId))
                 {
-                    context.HttpContext.Items["AlreadyVoted"] = true;
-                    context.HttpContext.Items["PollMessage"] = "You have already voted in this poll.";
+                    if (context.Controller is Controller controller)
+                    {
+                        controller.TempData["Message"] = "You have already voted in this poll.";
+                    }
                     context.Result = new RedirectToActionResult("Index", "Poll", null);
                 }
             }

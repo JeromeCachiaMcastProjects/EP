@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace DataAccess.Repositories
 {
@@ -23,13 +24,13 @@ namespace DataAccess.Repositories
             SavePolls(polls);
         }
 
-        public IEnumerable<Poll> GetPolls()
+        public IQueryable<Poll> GetPolls()
         {
             if (!File.Exists(_filePath))
-                return new List<Poll>();
+                return new List<Poll>().AsQueryable();
 
             var json = File.ReadAllText(_filePath);
-            return JsonSerializer.Deserialize<List<Poll>>(json) ?? new List<Poll>();
+            return (JsonSerializer.Deserialize<List<Poll>>(json) ?? new List<Poll>()).AsQueryable();
         }
 
         public void Vote(int pollId, int optionNumber)
@@ -38,13 +39,18 @@ namespace DataAccess.Repositories
             var poll = polls.FirstOrDefault(p => p.Id == pollId);
             if (poll == null) return;
 
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId)) return;
+
+            if (poll.VotedUserIds.Contains(userId)) return;
+
             switch (optionNumber)
             {
                 case 1: poll.Option1VotesCount++; break;
                 case 2: poll.Option2VotesCount++; break;
                 case 3: poll.Option3VotesCount++; break;
             }
-
+            poll.VotedUserIds.Add(userId);
             SavePolls(polls);
         }
 
@@ -53,6 +59,13 @@ namespace DataAccess.Repositories
             var json = JsonSerializer.Serialize(polls, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, json);
         }
+
+        private string GetCurrentUserId()
+        {
+            var httpContext = new HttpContextAccessor().HttpContext;
+            return httpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        }
+
     }
 }
 

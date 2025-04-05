@@ -10,7 +10,7 @@ namespace Domain.Interfaces
     public interface IPollRepository
     {
         void CreatePoll(Poll poll);
-        IEnumerable<Poll> GetPolls();
+        IQueryable<Poll> GetPolls();
         void Vote(int pollId, int optionNumber);
     }
 }

@@ -5,9 +5,12 @@
     "Option1Text": "json",
     "Option2Text": "db",
     "Option3Text": ".txt",
-    "Option1VotesCount": 1,
-    "Option2VotesCount": 0,
-    "Option3VotesCount": 0,
-    "DateCreated": "2025-04-04T15:12:01.1825974Z"
+    "Option1VotesCount": 4,
+    "Option2VotesCount": 1,
+    "Option3VotesCount": 1,
+    "DateCreated": "2025-04-04T15:12:01.1825974Z",
+    "VotedUserIds": [
+      "8055a362-124a-4387-b487-7df4b6417ec2"
+    ]
   }
 ]

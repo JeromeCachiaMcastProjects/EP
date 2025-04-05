@@ -25,9 +25,9 @@ namespace DataAccess.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<Poll> GetPolls()
+        public IQueryable<Poll> GetPolls()
         {
-            return _context.Polls.OrderByDescending(p => p.DateCreated).ToList();
+            return _context.Polls.OrderByDescending(p => p.DateCreated);
         }
 
         public void Vote(int pollId, int optionNumber)
