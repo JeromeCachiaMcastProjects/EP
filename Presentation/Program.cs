@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var useFileRepo = builder.Configuration.GetValue<bool>("UseFileRepository");
 
 // Add services to the container.
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+//string connectionString = "Data Source=SQL1003.site4now.net;Initial Catalog=db_ab745e_polldb;MultipleActiveResultSets=true;User Id=db_ab745e_polldb_admin;Password=#w6nta*fE3r9diF";
 string connectionString = "Server=LAPTOP-D3AORRD8\\SQLEXPRESS;Database=PollDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
